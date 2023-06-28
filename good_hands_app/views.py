@@ -10,3 +10,13 @@ class LandingPageView(View):
 class AddDonationView(View):
     def get(self, request):
         return render(request, "form.html")
+
+
+class LoginView(View):
+    def get(self, request):
+        return render(request, "login.html")
+
+
+class RegisterView(View):
+    def get(self, request):
+        return render(request, "register.html")
