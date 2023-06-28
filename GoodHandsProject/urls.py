@@ -24,7 +24,7 @@ from good_hands_app.views import LandingPageView, AddDonationView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPageView.as_view(), name='landing-page'),
-    path('donation/', AddDonationView.as_view(), name='donation'),
+    path('form/', AddDonationView.as_view(), name='donation'),
 
 ]
 

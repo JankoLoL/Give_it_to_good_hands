@@ -10,3 +10,6 @@ class LandingPageView(View):
 class AddDonationView(View):
     def get(self, request):
         return render(request, "form.html")
+
+    def post(self, request):
+        return render(request, "form-confirmation.html")
