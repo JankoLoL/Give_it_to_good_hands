@@ -6,6 +6,9 @@ from django.contrib.auth.models import User
 class Category(models.Model):
     name = models.CharField(max_length=64)
 
+    def __str__(self):
+        return self.name
+
 
 class Institution(models.Model):
     INSTITUTION_TYPE = [
@@ -15,8 +18,11 @@ class Institution(models.Model):
     ]
     name = models.CharField(max_length=64)
     description = models.TextField()
-    type = forms.ChoiceField(choices=INSTITUTION_TYPE, initial="fundacja")
+    type = models.CharField(max_length=64, choices=INSTITUTION_TYPE, default="fundacja")
     categories = models.ManyToManyField(Category)
+
+    def __str__(self):
+        return self.name
 
 
 class Donation(models.Model):
@@ -31,3 +37,6 @@ class Donation(models.Model):
     pick_up_time = models.TimeField()
     pick_up_comment = models.TextField()
     user = models.ForeignKey("auth.User", null=True, default=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.quantity} worków dla {self.institution} z {self.city}"
