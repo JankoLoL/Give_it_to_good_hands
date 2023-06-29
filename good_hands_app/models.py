@@ -18,7 +18,7 @@ class Institution(models.Model):
     ]
     name = models.CharField(max_length=64)
     description = models.TextField()
-    type = forms.ChoiceField(choices=INSTITUTION_TYPE, initial="fundacja")
+    type = models.CharField(max_length=64, choices=INSTITUTION_TYPE, default="fundacja")
     categories = models.ManyToManyField(Category)
 
     def __str__(self):

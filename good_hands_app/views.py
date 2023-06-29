@@ -12,9 +12,14 @@ class LandingPageView(View):
         institutions_quantity = Institution.objects.all().count()
         if institutions_quantity is None:
             institutions_quantity = 0
+
+        institutions = Institution.objects.all()
+        institution_type = institutions.values('type').distinct()
         context = {
             'bags_quantity': bags_quantity,
             'institutions_quantity': institutions_quantity,
+            'institutions': institutions,
+            'institution_type': institution_type,
         }
         return render(request, "index.html", context)
 
