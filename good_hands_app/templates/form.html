@@ -2,10 +2,7 @@
 <!DOCTYPE html>
 {% load static %}
 
-{% block header %}
-
-{% endblock header %}
-
+{% if user.is_authenticated %}
 {% block content %}
     <body>
     <section class="form--steps">
@@ -257,4 +254,5 @@
     <script src="{% static 'js/app.js' %}"></script>
     </body>
 {% endblock content %}
+{%  endif %}
 </html>

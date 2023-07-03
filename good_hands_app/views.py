@@ -1,5 +1,6 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from django.db.models import Sum
@@ -26,7 +27,10 @@ class LandingPageView(View):
         return render(request, "index.html", context)
 
 
-class AddDonationView(View):
+class AddDonationView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+
     def get(self, request):
         return render(request, "form.html")
 
