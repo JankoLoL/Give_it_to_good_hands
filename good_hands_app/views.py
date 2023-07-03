@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from django.db.models import Sum
-from good_hands_app.models import Donation, Institution
+from good_hands_app.models import Donation, Institution,Category
 
 
 class LandingPageView(View):
@@ -32,7 +32,8 @@ class AddDonationView(LoginRequiredMixin, View):
 
 
     def get(self, request):
-        return render(request, "form.html")
+        categories = Category.objects.all()
+        return render(request, "form.html", {'categories': categories})
 
 
 class LoginView(View):
