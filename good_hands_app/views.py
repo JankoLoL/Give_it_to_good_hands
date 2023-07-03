@@ -1,4 +1,6 @@
+from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from django.db.models import Sum
@@ -25,7 +27,10 @@ class LandingPageView(View):
         return render(request, "index.html", context)
 
 
-class AddDonationView(View):
+class AddDonationView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+
     def get(self, request):
         return render(request, "form.html")
 
@@ -33,6 +38,23 @@ class AddDonationView(View):
 class LoginView(View):
     def get(self, request):
         return render(request, "login.html")
+
+    def post(self, request):
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        if (email, password) is not None:
+            user = User.objects.get(email=email)
+            if user.check_password(password):
+                login(request, user)
+                return redirect('landing-page')
+            else:
+                return redirect('login')
+
+
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return render(request, "index.html")
 
 
 class RegisterView(View):
@@ -48,6 +70,7 @@ class RegisterView(View):
         if password != password2:
             redirect('register')
         if (name, surname, email, password, password2) is not None:
-            user = User.objects.create_user(first_name=name, last_name=surname, email=email, password=password, username=email)
+            user = User.objects.create_user(first_name=name, last_name=surname, email=email, password=password,
+                                            username=email)
             user.save()
             return redirect('login')

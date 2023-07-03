@@ -2,10 +2,7 @@
 <!DOCTYPE html>
 {% load static %}
 
-{% block header %}
-
-{% endblock header %}
-
+{% if user.is_authenticated %}
 {% block content %}
     <body>
     <section class="form--steps">
@@ -44,9 +41,9 @@
                                     value="clothes-to-use"
                             />
                             <span class="checkbox"></span>
-                            <span class="description"
-                            >ubrania, które nadają się do ponownego użycia</span
-                            >
+                            <span class="description">
+                                ubrania, które nadają się do ponownego użycia
+                            </span>
                         </label>
                     </div>
 
@@ -257,4 +254,5 @@
     <script src="{% static 'js/app.js' %}"></script>
     </body>
 {% endblock content %}
+{%  endif %}
 </html>
