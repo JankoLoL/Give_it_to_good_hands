@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views import View
@@ -47,6 +47,12 @@ class LoginView(View):
                 return redirect('login')
 
 
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return render(request, "index.html")
+
+
 class RegisterView(View):
     def get(self, request):
         return render(request, "register.html")
@@ -60,6 +66,7 @@ class RegisterView(View):
         if password != password2:
             redirect('register')
         if (name, surname, email, password, password2) is not None:
-            user = User.objects.create_user(first_name=name, last_name=surname, email=email, password=password, username=email)
+            user = User.objects.create_user(first_name=name, last_name=surname, email=email, password=password,
+                                            username=email)
             user.save()
             return redirect('login')
