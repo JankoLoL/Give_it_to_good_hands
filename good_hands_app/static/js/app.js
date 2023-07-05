@@ -252,4 +252,16 @@ document.addEventListener("DOMContentLoaded", function() {
   if (form !== null) {
     new FormSteps(form);
   }
+  let categoryElements = document.querySelectorAll('[data-category]');
+
+  function filterOrganizations(selectedCategory) {
+    let organizationElement = document.querySelectorAll('[data-organization]');
+
+    for (let i = 0; i < organizationElement.length; i++) {
+      let organizationElement = organizationElement[i];
+        let organizationCategory = organizationElement.getAttribute('data-category');
+        organizationElement.style.display = (selectedCategory == 'all' || organizationCategory == selectedCategory) ? 'block' : 'none';
+    }
+  }
 });
+
