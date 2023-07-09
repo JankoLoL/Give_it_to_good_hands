@@ -82,3 +82,10 @@ class RegisterView(View):
                                             username=email)
             user.save()
             return redirect('login')
+
+
+class UserView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def get(self, request):
+        return render(request, "user.html")
