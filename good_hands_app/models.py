@@ -21,6 +21,10 @@ class Institution(models.Model):
     type = models.CharField(max_length=64, choices=INSTITUTION_TYPE, default="fundacja")
     categories = models.ManyToManyField(Category)
 
+    class Meta:
+        verbose_name_plural = "Institutions"
+        ordering = ["name"]
+
     def __str__(self):
         return self.name
 
