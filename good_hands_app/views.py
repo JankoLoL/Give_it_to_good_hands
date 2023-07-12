@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from django.db.models import Sum
-from good_hands_app.models import Donation, Institution,Category
+from good_hands_app.models import Donation, Institution, Category,InstitutionCategory
 
 
 class LandingPageView(View):
@@ -30,17 +30,41 @@ class LandingPageView(View):
 class AddDonationView(LoginRequiredMixin, View):
     login_url = '/login/'
 
-
     def get(self, request):
         categories = Category.objects.all()
         institutions = Institution.objects.all()
+        # institution_category = InstitutionCategory.objects.all()
+
         context = {
             'categories': categories,
             'institutions': institutions,
+            # 'institution_category': institution_category,
         }
         return render(request, "form.html", context)
 
-
+    def post(self, request):
+        quantity = request.POST.get('bags')
+        categories = request.POST.getlist('categories')
+        institution = request.POST.get('organization')
+        address = request.POST.get('address')
+        phone_number = request.POST.get('phone')
+        city = request.POST.get('city')
+        zip_code = request.POST.get('postcode')
+        pick_up_date = request.POST.get('data')
+        pick_up_time = request.POST.get('time')
+        pick_up_comment = request.POST.get('more_info')
+        user = request.user
+        if (quantity, categories, institution, address, phone_number, city, zip_code, pick_up_date, pick_up_time,
+            pick_up_comment, user) is not None:
+            donation = Donation.objects.create(quantity=quantity, institution_id=institution, address=address,
+                                               phone_number=phone_number, city=city, zip_code=zip_code,
+                                               pick_up_date=pick_up_date, pick_up_time=pick_up_time,
+                                               pick_up_comment=pick_up_comment, user=user)
+            donation.categories.set(categories)
+            donation.save()
+            return render(request, "form-confirmation.html")
+        else:
+            return redirect('add-donation')
 
 
 class LoginView(View):

@@ -44,3 +44,11 @@ class Donation(models.Model):
 
     def __str__(self):
         return f"{self.quantity} worków dla {self.institution} z {self.city}"
+
+
+class InstitutionCategory(models.Model):
+    institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.institution} {self.category}"

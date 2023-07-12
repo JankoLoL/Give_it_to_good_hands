@@ -1,8 +1,8 @@
 from django.contrib import admin
-from good_hands_app.models import Category, Institution, Donation
+from good_hands_app.models import Category, Institution, Donation, InstitutionCategory
 
 
-myModels = [Institution, Donation, Category]  # iterable list
+myModels = [Institution, Donation, Category, InstitutionCategory]  # iterable list
 
 admin.site.register(myModels)
 

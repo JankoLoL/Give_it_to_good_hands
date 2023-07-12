@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls.static import static
 
-from good_hands_app.views import LandingPageView, AddDonationView, LoginView,LogoutView,RegisterView,UserView
+from good_hands_app.views import LandingPageView, AddDonationView, LoginView, LogoutView, RegisterView, UserView
 
 urlpatterns = [
     path('admin/', admin.site.urls),

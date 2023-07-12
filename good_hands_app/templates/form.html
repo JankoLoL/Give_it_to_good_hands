@@ -1,5 +1,5 @@
 {% extends '__base__.html' %}
-<!DOCTYPE html>
+
 {% load static %}
 
 {% if user.is_authenticated %}
@@ -28,27 +28,20 @@
             <div class="form--steps-container">
                 <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
-                <form action="form-confirmation.html" method="post">
+                <form method="post">
+                    {% csrf_token %}
                     <!-- STEP 1: class .active is switching steps -->
                     <div data-step="1" class="active">
                         <h3>Zaznacz co chcesz oddać:</h3>
 
                         {% for category in categories %}
-
                             <div class="form-group form-group--checkbox">
                                 <label>
-                                    <input
-                                            type="checkbox"
-                                            name="categories"
-                                            value="{{ category.id }}"
-                                    />
+                                    <input type="checkbox" name="categories" value="{{ category.id }}"/>
                                     <span class="checkbox"></span>
-                                    <span class="description">
-                                {{ category.name }}
-                            </span>
+                                    <span class="description">{{ category }}</span>
                                 </label>
                             </div>
-
                         {% endfor %}
 
                         <div class="form-group form-group--buttons">
@@ -74,19 +67,25 @@
                     </div>
 
 
-                    <!-- STEP 4 -->
-                    <div data-step="3" class="data-step-3">
+                    <!-- STEP 3 -->
+                    <div data-step="3" id="organization-choice">
                         <h3>Wybierz organizacje, której chcesz pomóc:</h3>
+
                         {% for institution in institutions %}
-                            <div class="form-group form-group--checkbox" data-organization
-                                 data-category="{{ institution.category.slug }}">
+                            <div class="form-group form-group--checkbox">
                                 <label>
                                     <input type="radio" name="organization" value="{{ institution.id }}"/>
                                     <span class="checkbox radio"></span>
                                     <span class="description">
-                                    <div class="title">{{ institution.name }}</div>
-                                     <div class="subtitle"> Cel i misja: {{ institution.description }}</div>
-                                 </span>
+							<div class="title">{{ institution.name }}</div>
+                            <div class="subtitle">{{ institution.description }}</div>
+
+                            <div id="categories-inst" style="display: none">
+                                {% for category in institution.categories.all %}
+                                    {{ category.id }}
+                                {% endfor %}
+                            </div>
+						</span>
                                 </label>
                             </div>
                         {% endfor %}
@@ -97,7 +96,7 @@
                         </div>
                     </div>
 
-                    <!-- STEP 5 -->
+                    <!-- STEP 4 -->
                     <div data-step="4">
                         <h3>Podaj adres oraz termin odbioru rzecz przez kuriera:</h3>
 
@@ -149,7 +148,7 @@
                         </div>
                     </div>
 
-                    <!-- STEP 6 -->
+                    <!-- STEP 5 -->
                     <div data-step="5">
                         <h3>Podsumowanie Twojej darowizny</h3>
 
@@ -208,4 +207,4 @@
         </body>
     {% endblock content %}
 {% endif %}
-</html>
+

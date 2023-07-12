@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         changeSlide(e) {
             e.preventDefault();
+            console.log('changeSlide')
             const $btn = e.target;
 
             // Buttons Active class change
@@ -61,6 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
          */
         changePage(e) {
             e.preventDefault();
+            console.log('changePage')
             const page = e.target.dataset.page;
 
             console.log(page);
@@ -233,11 +235,34 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
 
+            form.querySelector("div[data-step='5'] button[type='submit']").innerText = 'Potwierdzam'
+
             this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
             this.$step.parentElement.hidden = this.currentStep >= 6;
 
             // TODO: get data from inputs and show them in summary
+            // get data from inputs and show them in summary
+            // Getting data from inputs
+            const categories = document.querySelectorAll("input[name='categories']:checked")
+            const quantity = document.querySelector("input[name='bags']")
+
+            const formStep4Inputs = form.querySelectorAll("div[data-step='4'] div.form-group--inline input")
+            const textArea = form.querySelector("div[data-step='4'] div.form-group--inline textarea")
+
+            // filtering organizations by entered categories
+            const organizations = document.querySelectorAll("#organization-choice div.form-group--checkbox")
+            organizations.forEach(e => {
+                e.style.display = '';
+                categories.forEach(cat => {
+                    if (!e.querySelector('#categories-inst').innerText.includes(cat.value)) {
+                        e.style.display = 'none';
+                    }
+                })
+            });
         }
+
+        // const organization = document.querySelector("input[name='organization']:checked")
+        // const organizationName = organization.parentElement.querySelector('div.title').innerText
 
         /**
          * Submit form
@@ -254,47 +279,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector(".form--steps");
     if (form !== null) {
         new FormSteps(form);
-    }
-
-    var selectedCategories = []; // Przechowuje wybrane kategorie z Step 1
-
-    var nextButtonStep1 = document.querySelector('.next-step[data-step="1"]');
-    if (nextButtonStep1) {
-        nextButtonStep1.addEventListener('click', function () {
-            selectedCategories = Array.from(document.querySelectorAll('input[name="categories"]:checked'))
-                .map(function (category) {
-                    return category.value;
-                });
-
-            // Pokaż Step 3 po kliknięciu przycisku "Dalej" w Step 1
-            var step3 = document.querySelector('[data-step="3"]');
-            if (step3) {
-                step3.classList.add('active');
-            }
-        });
-    }
-
-    var nextButtonStep3 = document.querySelector('.next-step[data-step="3"]');
-    if (nextButtonStep3) {
-        nextButtonStep3.addEventListener('click', function () {
-            var organizationElements = document.querySelectorAll('[data-organization]');
-
-            for (var i = 0; i < organizationElements.length; i++) {
-                var organizationElement = organizationElements[i];
-                var organizationCategories = organizationElement.getAttribute('data-category').split(',');
-
-                if (
-                    selectedCategories.length === 0 ||
-                    selectedCategories.some(function (category) {
-                        return organizationCategories.includes(category);
-                    })
-                ) {
-                    organizationElement.style.display = 'block';
-                } else {
-                    organizationElement.style.display = 'none';
-                }
-            }
-        });
     }
 
 
