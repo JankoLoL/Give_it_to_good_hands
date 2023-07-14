@@ -182,6 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
             this.slides = [...this.$stepInstructions, ...$stepForms];
 
             this.init();
+
         }
 
         /**
@@ -189,7 +190,6 @@ document.addEventListener("DOMContentLoaded", function () {
          */
         init() {
             this.events();
-            this.updateForm();
         }
 
         /**
@@ -222,12 +222,13 @@ document.addEventListener("DOMContentLoaded", function () {
          * Update form front-end
          * Show next or previous section etc.
          */
+
         updateForm() {
             this.$step.innerText = this.currentStep;
 
             // TODO: Validation
 
-            this.slides.forEach(slide => {
+            this.slides.forEach(slide=> {
                 slide.classList.remove("active");
 
                 if (slide.dataset.step == this.currentStep) {
@@ -259,18 +260,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 })
             });
-            const organization = document.querySelector("input[name='organization']:checked")
-            const organizationName = organization.parentElement.querySelector('div.title').innerText
-            const summaryItems = form.querySelectorAll("div[data-step='5']span.summary--text")
-            const listElements = form.querySelectorAll("div[data-step='5'] div.form-section--column li")
 
-            summaryItems[0].innerText = `${quantity.value} x 60l worków z przedmiotami`
-            summaryItems[1].innerText = `${organizationName}`
+            // show summary
+            if (this.currentStep === 5) {
+                const organization = document.querySelector("input[name='organization']:checked")
+                const organizationName = organization.parentElement.querySelector('div.title').innerText
+                const summaryItems = form.querySelectorAll("div[data-step='5'] div.form-section--column div.summary--text")
+                const listElements = form.querySelectorAll("div[data-step='5'] div.form-section--column li")
 
-            for (let i = 0; i < formStep4Inputs.length; i++) {
-                listElements[i].innerText = formStep4Inputs[i].value
+                summaryItems[0].innerText = `${quantity.value} x 60l worków z przedmiotami`
+                summaryItems[1].innerText = `${organizationName}`
+
+                for (let i = 0; i < formStep4Inputs.length; i++) {
+                    listElements[i].innerText = formStep4Inputs[i].value
+                }
+                listElements[listElements.length - 1].innerText = textArea.value
             }
-            listElements[listElements.length - 1].innerText = textArea.value
         }
 
         // submit form
