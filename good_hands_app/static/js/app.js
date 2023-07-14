@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
             this.$step.parentElement.hidden = this.currentStep >= 6;
 
-            // TODO: get data from inputs and show them in summary
+
             // get data from inputs and show them in summary
             // Getting data from inputs
             const categories = document.querySelectorAll("input[name='categories']:checked")
@@ -249,7 +249,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const formStep4Inputs = form.querySelectorAll("div[data-step='4'] div.form-group--inline input")
             const textArea = form.querySelector("div[data-step='4'] div.form-group--inline textarea")
 
-            // filtering organizations by entered categories
+            // filtering organizations by chosen categories
             const organizations = document.querySelectorAll("#organization-choice div.form-group--checkbox")
             organizations.forEach(e => {
                 e.style.display = '';
@@ -259,20 +259,47 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 })
             });
+            const organization = document.querySelector("input[name='organization']:checked")
+            const organizationName = organization.parentElement.querySelector('div.title').innerText
+            const summaryItems = form.querySelectorAll("div[data-step='5']span.summary--text")
+            const listElements = form.querySelectorAll("div[data-step='5'] div.form-section--column li")
+
+            summaryItems[0].innerText = `${quantity.value} x 60l worków z przedmiotami`
+            summaryItems[1].innerText = `${organizationName}`
+
+            for (let i = 0; i < formStep4Inputs.length; i++) {
+                listElements[i].innerText = formStep4Inputs[i].value
+            }
+            listElements[listElements.length - 1].innerText = textArea.value
         }
 
-        // const organization = document.querySelector("input[name='organization']:checked")
-        // const organizationName = organization.parentElement.querySelector('div.title').innerText
-
-        /**
-         * Submit form
-         *
-         * TODO: validation, send data to server
-         */
+        // submit form
         submit(e) {
-            e.preventDefault();
-            this.currentStep++;
-            this.updateForm();
+            let submitBoolean = true;
+
+            // validation
+            const quantity = document.querySelector("input[name='bags']")
+            const organization = document.querySelector("input[name='organization']:checked")
+            const listElements = form.querySelectorAll("div[data-step='5'] div.form-section--column li")
+            const button = form.querySelector("div[data-step='5'] button[type='submit']")
+
+            if (quantity.value < 1 || organization === null) {
+                button.innerText = 'Uzupełnij dane'
+                submitBoolean = false
+                e.preventDefault();
+            }
+            for (let i = 0; i < listElements.length - 1; i++) {
+                if (listElements[i].innerText === '') {
+                    button.innerText = 'Uzupełnij dane'
+                    submitBoolean = false;
+                    e.preventDefault();
+                }
+            }
+
+            if (submitBoolean) {
+                this.currentStep++;
+                this.updateForm();
+            }
         }
     }
 
@@ -282,5 +309,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-});
+})
+;
 
