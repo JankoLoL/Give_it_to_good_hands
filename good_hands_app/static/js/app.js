@@ -44,8 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (e.target.classList.contains("btn") && e.target.parentElement.parentElement.classList.contains("help--slides-pagination")) {
                     this.changePage(e);
                 }
-            }
-            );
+            });
         }
 
         changeSlide(e) {
@@ -95,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
             })
         }
 
-        Set class "active" on the right button
+        // Set class "active" on the right button
         setActivePageButton() {
             this.$paginationNumbers.querySelectorAll("a").forEach(btn => {
                 btn.classList.remove("active");
