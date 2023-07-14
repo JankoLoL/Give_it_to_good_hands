@@ -78,7 +78,7 @@ class LoginView(View):
             user = User.objects.get(email=email)
             if user.check_password(password):
                 login(request, user)
-                return redirect('landing-page')
+                return redirect('profile')
             else:
                 return redirect('login')
 

@@ -1,0 +1,21 @@
+{% extends '__base__.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="login-page">
+        <form method="post" class="form-edit-user">
+            {% csrf_token %}
+            <div>
+                <h3> Edytuj dane:</h3>
+                <div class="form-group">
+                    <input type="text" name="name" value="{{ user.first_name }}" placeholder="Imię"/>
+                </div>
+
+            </div>
+        </form>
+    </section>
+
+
+
+
+{% endblock content %}
