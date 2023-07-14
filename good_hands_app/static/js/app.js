@@ -8,11 +8,16 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$buttonsContainer = $el.querySelector(".help--buttons");
             this.$slidesContainers = $el.querySelectorAll(".help--slides");
             this.currentSlide = this.$buttonsContainer.querySelector(".active").parentElement.dataset.id;
+            this.paginationLimit = 2;
             this.init();
         }
 
         init() {
+            this.getPagesData()
             this.events();
+            this.getPaginationNumbers();
+            this.setDisplayedItems(1);
+            this.setActivePageButton();
         }
 
         events() {
@@ -22,6 +27,13 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$buttonsContainer.addEventListener("click", e => {
                 if (e.target.classList.contains("btn")) {
                     this.changeSlide(e);
+                    this.$paginationNumbers.querySelectorAll("li").forEach(e => {
+                        this.$paginationNumbers.removeChild(e)
+                    })
+                    this.getPagesData()
+                    this.getPaginationNumbers()
+                    this.setDisplayedItems(1);
+                    this.setActivePageButton();
                 }
             });
 
@@ -32,12 +44,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (e.target.classList.contains("btn") && e.target.parentElement.parentElement.classList.contains("help--slides-pagination")) {
                     this.changePage(e);
                 }
-            });
+            }
+            );
         }
 
         changeSlide(e) {
             e.preventDefault();
-            console.log('changeSlide')
             const $btn = e.target;
 
             // Buttons Active class change
@@ -57,15 +69,64 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
-        /**
-         * TODO: callback to page change event
-         */
+        // Pagination
+
+        // Get data of the shown elements
+        getPagesData() {
+            this.$paginatedList = document.querySelector(".help--slides.active");
+            this.$paginationNumbers = this.$paginatedList.querySelector("ul.help--slides-pagination");
+            this.$listItems = this.$paginatedList.querySelectorAll("ul.help--slides-items li");
+            this.currentPage = 1;
+            this.pageCount = Math.ceil(this.$listItems.length / this.paginationLimit);
+        }
+
+        // Show on page required organizations
+        setDisplayedItems(pageNum) {
+            this.currentPage = pageNum;
+
+            const prevRange = (pageNum - 1) * this.paginationLimit;
+            const currRange = pageNum * this.paginationLimit;
+
+            this.$listItems.forEach((el, index) => {
+                el.classList.add("hidden-item")
+                if (index >= prevRange && index < currRange) {
+                    el.classList.remove("hidden-item")
+                }
+            })
+        }
+
+        Set class "active" on the right button
+        setActivePageButton() {
+            this.$paginationNumbers.querySelectorAll("a").forEach(btn => {
+                btn.classList.remove("active");
+
+                const pageIndex = btn.getAttribute("page-index")
+                if (this.currentPage == pageIndex) {
+                    btn.classList.add("active")
+                }
+            });
+        }
+
+        // Get the data of paginated lists
+        getPaginationNumbers() {
+            for (let i = 1; i <= this.pageCount; i++) {
+                const pageNumberLi = document.createElement("li")
+                const pageNumberA = document.createElement("a")
+                pageNumberA.className = "btn btn--small btn--without-border";
+                pageNumberA.innerText = i;
+                pageNumberA.setAttribute("page-index", i)
+                pageNumberLi.appendChild(pageNumberA)
+                this.$paginationNumbers.appendChild(pageNumberLi)
+            }
+        }
+
+        // Action while clicked page button
         changePage(e) {
             e.preventDefault();
-            console.log('changePage')
-            const page = e.target.dataset.page;
-
-            console.log(page);
+            const $btn = e.target;
+            const pageIndex = e.target.getAttribute("page-index");
+            this.setDisplayedItems(pageIndex);
+            this.setActivePageButton();
         }
     }
 
@@ -182,7 +243,6 @@ document.addEventListener("DOMContentLoaded", function () {
             this.slides = [...this.$stepInstructions, ...$stepForms];
 
             this.init();
-
         }
 
         /**
@@ -222,13 +282,11 @@ document.addEventListener("DOMContentLoaded", function () {
          * Update form front-end
          * Show next or previous section etc.
          */
-
         updateForm() {
             this.$step.innerText = this.currentStep;
-
             // TODO: Validation
 
-            this.slides.forEach(slide=> {
+            this.slides.forEach(slide => {
                 slide.classList.remove("active");
 
                 if (slide.dataset.step == this.currentStep) {
@@ -241,16 +299,14 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
             this.$step.parentElement.hidden = this.currentStep >= 6;
 
-
             // get data from inputs and show them in summary
             // Getting data from inputs
             const categories = document.querySelectorAll("input[name='categories']:checked")
             const quantity = document.querySelector("input[name='bags']")
-
             const formStep4Inputs = form.querySelectorAll("div[data-step='4'] div.form-group--inline input")
             const textArea = form.querySelector("div[data-step='4'] div.form-group--inline textarea")
 
-            // filtering organizations by chosen categories
+            // filtering organizations by entered categories
             const organizations = document.querySelectorAll("#organization-choice div.form-group--checkbox")
             organizations.forEach(e => {
                 e.style.display = '';
@@ -261,11 +317,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
             });
 
-            // show summary
+            // show data in the summary
             if (this.currentStep === 5) {
                 const organization = document.querySelector("input[name='organization']:checked")
                 const organizationName = organization.parentElement.querySelector('div.title').innerText
-                const summaryItems = form.querySelectorAll("div[data-step='5'] div.form-section--column div.summary--text")
+                const summaryItems = form.querySelectorAll("div[data-step='5'] span.summary--text")
                 const listElements = form.querySelectorAll("div[data-step='5'] div.form-section--column li")
 
                 summaryItems[0].innerText = `${quantity.value} x 60l worków z przedmiotami`
@@ -278,7 +334,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        // submit form
+        /**
+         * Submit form
+         *
+         * validation, send data to server
+         */
+
         submit(e) {
             let submitBoolean = true;
 
@@ -312,8 +373,4 @@ document.addEventListener("DOMContentLoaded", function () {
     if (form !== null) {
         new FormSteps(form);
     }
-
-
-})
-;
-
+});

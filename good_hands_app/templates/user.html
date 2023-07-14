@@ -1,6 +1,4 @@
 {% extends '__base__.html' %}
-
-<!doctype html>
 {% load static %}
 
 {% block header %}
@@ -11,13 +9,25 @@
             <p> Email: {{ user.email }}</p>
         </div>
 
-
     {% endif %}
 
 {% endblock header %}
 
-
 {% block content %}
+    {% if user.is_authenticated %}
+        <h3>Przekazane dary:</h3>
+        <ul>
+            {% for donation in donations %}
+                <li>
+                    <p>Ilość przekazanych worków: {{ donation.quantity }}<p>
+                    <p>Organizacja: {{ donation.institution }}</p>
+                    <p>Kategoria: {{ donation.categories }}</p>
+                    <p>Data przekazania {{ donation.pick_up_date }}</p>
+                </li>
+
+            {% endfor %}
+        </ul>
+    {% endif %}
 
 
 {% endblock content %}

@@ -112,4 +112,7 @@ class UserView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self, request):
-        return render(request, "user.html")
+        context={
+            'donations': Donation.objects.filter(user=request.user)
+        }
+        return render(request, "user.html", context=context)
