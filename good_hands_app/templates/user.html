@@ -15,18 +15,22 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        <h3>Przekazane dary:</h3>
-        <ul>
-            {% for donation in donations %}
-                <li>
-                    <p>Ilość przekazanych worków: {{ donation.quantity }}<p>
-                    <p>Organizacja: {{ donation.institution }}</p>
-                    <p>Kategoria: {{ donation.categories }}</p>
-                    <p>Data przekazania {{ donation.pick_up_date }}</p>
-                </li>
+        {% if donations %}
+            <h3>Przekazane dary:</h3>
+            <ul>
+                {% for donation in donations %}
+                    <li>
+                        <p>Ilość przekazanych worków: {{ donation.quantity }}<p>
+                        <p>Organizacja: {{ donation.institution }}</p>
+                        <p>Kategoria: {{ donation.categories }}</p>
+                        <p>Data przekazania {{ donation.pick_up_date }}</p>
+                    </li>
 
-            {% endfor %}
-        </ul>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% else %}
+        <p> Brak donacji</p>
     {% endif %}
 
 
