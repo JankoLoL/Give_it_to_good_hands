@@ -5,7 +5,7 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>Document</title>
+    <title>Oddaj dary w dobre ręce</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
 </head>
 <body>
@@ -17,11 +17,11 @@
                 Witaj {{ user.username }}
                 <ul class="dropdown">
                     <li><a href="{% url 'profile' %}">Profil</a></li>
-                    <li><a href="#">Moje zbiórki</a></li>
+{#                    <li><a href="{% url 'user-edit' %}">Ustawienia</a></li>#}
+                    <li><a href="{% url 'logout' %}">Wyloguj</a></li>
                     {% if user.is_superuser %}
                         <li><a href="{% url 'admin:index' %}" class="admin=btn">Panel administracyjny</a></li>
                     {% endif %}
-                    <li><a href="{% url 'logout' %}" >Wyloguj</a></li>
                 </ul>
             </li>
         </ul>

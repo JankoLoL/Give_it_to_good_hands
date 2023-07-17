@@ -78,7 +78,7 @@ class LoginView(View):
             user = User.objects.get(email=email)
             if user.check_password(password):
                 login(request, user)
-                return redirect('landing-page')
+                return redirect('profile')
             else:
                 return redirect('login')
 
@@ -112,4 +112,7 @@ class UserView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self, request):
-        return render(request, "user.html")
+        context={
+            'donations': Donation.objects.filter(user=request.user)
+        }
+        return render(request, "user.html", context=context)
