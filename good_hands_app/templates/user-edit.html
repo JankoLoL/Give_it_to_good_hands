@@ -21,18 +21,8 @@
                     <a href="{% url 'profile' %}" class="btn btn--red">Anuluj</a>
                 </div>
             </div>
-        </form>
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
 
-        <form method="post" class="form-edit-password" action="{% url 'profile-edit' user.pk %}">
-            {% csrf_token %}
             <div>
                 <h2>Zmień hasło</h2>
                 <div class="form-group">
@@ -50,5 +40,12 @@
                 </div>
             </div>
         </form>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
     </section>
 {% endblock content %}

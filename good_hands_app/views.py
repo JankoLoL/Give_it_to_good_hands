@@ -133,27 +133,26 @@ class UserEditView(LoginRequiredMixin, View):
             return redirect('/404/')
 
     def post(self, request, pk):
-        try:
-            user = get_object_or_404(User, pk=pk)
-            user.first_name = request.POST.get('name')
-            user.last_name = request.POST.get('surname')
-            user.email = request.POST.get('email')
+        user = get_object_or_404(User, pk=pk)
+        user.first_name = request.POST.get('name')
+        user.last_name = request.POST.get('surname')
+        user.email = request.POST.get('email')
 
-            old_password = request.POST.get('old_password')
-            if old_password and user.check_password(old_password):
-                new_password = request.POST.get('new_password')
-                new_password2 = request.POST.get('new_password2')
+        if not (user.first_name and user.last_name and user.email):
+            messages.error(request, "Wszystkie pola muszą być wypełnione.")
+            return redirect('profile-edit', pk=pk)
 
-                # Sprawdź, czy nowe hasło i jego powtórzenie są identyczne
-                if new_password == new_password2:
-                    user.set_password(new_password)
-                else:
-                    messages.error(request, "Nowe hasła nie są identyczne. Proszę wprowadzić identyczne hasła.")
-                    return redirect('profile-edit', pk=pk)
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+        new_password2 = request.POST.get('new_password2')
 
-            user.save()
-            messages.success(request, "Dane użytkownika zostały pomyślnie zaktualizowane.")
-            return redirect('profile')
+        if old_password and user.check_password(old_password):
+            if new_password == new_password2:
+                user.set_password(new_password)
+            else:
+                messages.error(request, "Nowe hasła nie są identyczne. Proszę wprowadzić identyczne hasła.")
+                return redirect('profile-edit', pk=pk)
 
-        except User.DoesNotExist:
-            return redirect('/404/')
+        user.save()
+        messages.success(request, "Dane użytkownika zostały pomyślnie zaktualizowane.")
+        return redirect('profile')
