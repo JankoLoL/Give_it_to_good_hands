@@ -139,11 +139,21 @@ class UserEditView(LoginRequiredMixin, View):
             user.last_name = request.POST.get('surname')
             user.email = request.POST.get('email')
 
-            new_password = request.POST.get('password')
-            if new_password:
-                user.set_password(new_password)
+            old_password = request.POST.get('old_password')
+            if old_password and user.check_password(old_password):
+                new_password = request.POST.get('new_password')
+                new_password2 = request.POST.get('new_password2')
+
+                # Sprawdź, czy nowe hasło i jego powtórzenie są identyczne
+                if new_password == new_password2:
+                    user.set_password(new_password)
+                else:
+                    messages.error(request, "Nowe hasła nie są identyczne. Proszę wprowadzić identyczne hasła.")
+                    return redirect('profile-edit', pk=pk)
 
             user.save()
+            messages.success(request, "Dane użytkownika zostały pomyślnie zaktualizowane.")
             return redirect('profile')
+
         except User.DoesNotExist:
             return redirect('/404/')

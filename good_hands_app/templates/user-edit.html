@@ -23,16 +23,12 @@
             </div>
         </form>
 
-        {% if password_mismatch %}
-        <div class="alert alert-danger">
-            Nowe hasła nie są identyczne. Proszę wprowadzić identyczne hasła.
-        </div>
-        {% endif %}
-
-        {% if incorrect_password %}
-        <div class="alert alert-danger">
-            Podane hasło jest niepoprawne. Proszę wprowadzić poprawne hasło.
-        </div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
         {% endif %}
 
         <form method="post" class="form-edit-password" action="{% url 'profile-edit' user.pk %}">
