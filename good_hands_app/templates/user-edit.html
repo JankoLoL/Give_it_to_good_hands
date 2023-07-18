@@ -3,19 +3,56 @@
 
 {% block content %}
     <section class="login-page">
-        <form method="post" class="form-edit-user">
+        <form method="post" class="form-edit-user" action="{% url 'profile-edit' user.pk %}">
             {% csrf_token %}
             <div>
-                <h3> Edytuj dane:</h3>
+                <h2> Edytuj dane:</h2>
                 <div class="form-group">
                     <input type="text" name="name" value="{{ user.first_name }}" placeholder="Imię"/>
                 </div>
+                <div class="form-group">
+                    <input type="text" name="surname" value="{{ user.last_name }}" placeholder="Nazwisko"/>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="email" value="{{ user.email }}" placeholder="Email"/>
+                </div>
+                <div class="form-group form-group--buttons">
+                    <button type="submit" class="btn btn--green">Zapisz</button>
+                    <a href="{% url 'profile' %}" class="btn btn--red">Anuluj</a>
+                </div>
+            </div>
+        </form>
 
+        {% if password_mismatch %}
+        <div class="alert alert-danger">
+            Nowe hasła nie są identyczne. Proszę wprowadzić identyczne hasła.
+        </div>
+        {% endif %}
+
+        {% if incorrect_password %}
+        <div class="alert alert-danger">
+            Podane hasło jest niepoprawne. Proszę wprowadzić poprawne hasło.
+        </div>
+        {% endif %}
+
+        <form method="post" class="form-edit-password" action="{% url 'profile-edit' user.pk %}">
+            {% csrf_token %}
+            <div>
+                <h2>Zmień hasło</h2>
+                <div class="form-group">
+                    <input type="password" name="old_password" placeholder="Stare hasło"/>
+                </div>
+                <div class="form-group">
+                    <input type="password" name="new_password" placeholder="Nowe hasło"/>
+                </div>
+                <div class="form-group">
+                    <input type="password" name="new_password2" placeholder="Powtórz nowe hasło"/>
+                </div>
+                <div class="form-group form-group--buttons">
+                    <button type="submit" class="btn btn--green">Zapisz</button>
+                    <a href="{% url 'profile' %}" class="btn btn--red">Anuluj</a>
+                </div>
             </div>
         </form>
     </section>
-
-
-
-
 {% endblock content %}

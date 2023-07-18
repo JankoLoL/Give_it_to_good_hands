@@ -19,7 +19,8 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls.static import static
 
-from good_hands_app.views import LandingPageView, AddDonationView, LoginView, LogoutView, RegisterView, UserView
+from good_hands_app.views import LandingPageView, AddDonationView, LoginView, LogoutView, RegisterView, UserView, \
+    UserEditView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +30,7 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('profile/', UserView.as_view(), name='profile'),
+    path('profile/<int:pk>/', UserEditView.as_view(), name='profile-edit'),
 
 ]
 

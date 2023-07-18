@@ -1,10 +1,11 @@
+from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.db.models import Sum
-from good_hands_app.models import Donation, Institution, Category,InstitutionCategory
+from good_hands_app.models import Donation, Institution, Category, InstitutionCategory
 
 
 class LandingPageView(View):
@@ -112,7 +113,37 @@ class UserView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self, request):
-        context={
+        context = {
             'donations': Donation.objects.filter(user=request.user)
         }
         return render(request, "user.html", context=context)
+
+
+class UserEditView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def get(self, request, pk):
+        try:
+            user = get_object_or_404(User, pk=pk)
+            context = {
+                'user': user,
+            }
+            return render(request, "user-edit.html", context=context)
+        except User.DoesNotExist:
+            return redirect('/404/')
+
+    def post(self, request, pk):
+        try:
+            user = get_object_or_404(User, pk=pk)
+            user.first_name = request.POST.get('name')
+            user.last_name = request.POST.get('surname')
+            user.email = request.POST.get('email')
+
+            new_password = request.POST.get('password')
+            if new_password:
+                user.set_password(new_password)
+
+            user.save()
+            return redirect('profile')
+        except User.DoesNotExist:
+            return redirect('/404/')
